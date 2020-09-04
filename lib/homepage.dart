@@ -11,12 +11,40 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Todo App'),
-          actions: [IconButton(icon: Icon(Icons.add), onPressed: null)],
+          title: Text(
+            'Todo App',
+            style: TextStyle(
+              fontSize: 25,
+            ),
+          ),
+          actions: <Widget>[
+            Center(
+              child: FlatButton(
+                padding: EdgeInsets.zero,
+                onPressed: () => Navigator.pushNamed(context, '/add'),
+                child: Text(
+                  'Add Todo',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white
+                  ),
+                )
+              )
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
+              onPressed: () => Navigator.pushNamed(context, '/add'),
+              iconSize: 35,
+              padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+            )
+          ],
         ),
         body: SafeArea(
             child: ListView(
-          children: <TodoWidget>[for (Todo todo in todosList) TodoWidget(todo)],
+          children: <TodoWidget>[for (Todo todo in Todo.todosList) TodoWidget(todo)],
         )));
   }
 }
@@ -30,7 +58,11 @@ class TodoWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Column(
-        children: <Widget>[Text('title'), Text('description')],
+        children: <Widget>[
+          Text(todo.title),
+          Text(todo.desc),
+          Text(todo.dateCreated.toIso8601String().substring(0, 10)),
+        ],
       ),
     );
   }

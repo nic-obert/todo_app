@@ -1,9 +1,12 @@
-List<Todo> todosList;
 
 class Todo {
-  String title;
-  String description;
-  DateTime dateCreated;
 
-  Todo(this.title, this.description, this.dateCreated);
+  static List<Todo> todosList = [];
+
+  String title;
+  String desc;
+  DateTime dateCreated;
+  String id;
+
+  Todo(this.title, this.desc, this.dateCreated, this.id);
 }
