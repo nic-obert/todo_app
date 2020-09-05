@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:http/http.dart' as http;
 import 'Todo.dart';
 import 'dart:convert';
@@ -8,7 +10,7 @@ final String apiEndpoint = 'https://nic05.pythonanywhere.com/todo-app/';
 //final String apiEndpoint = 'http://192.168.1.8:5000/todo-app/';
 
 final Map<String, String> fetchBody = {'apiKey': apiKey};
-
+final Map<String, String> headers = {HttpHeaders.authorizationHeader: 'API key'};
 
 void editTodo(Todo todo) {
 
@@ -19,7 +21,7 @@ void editTodo(Todo todo) {
     'rowid': todo.id
   };
 
-  http.post(apiEndpoint + 'edit', body: editBody);
+  http.post(apiEndpoint + 'edit', body: editBody, headers: headers);
 
 }
 
@@ -31,7 +33,7 @@ void deleteTodo(Todo todo) {
     'rowid': todo.id
   };
 
-  http.post(apiEndpoint + 'delete', body: deleteBody);
+  http.post(apiEndpoint + 'delete', body: deleteBody, headers: headers);
   Todo.todosList.removeWhere((element) => element.id == todo.id);
 }
 
@@ -45,7 +47,7 @@ void addTodo(Todo todo) async {
   'dateCreated': todo.dateCreated.toIso8601String().substring(0, 10)
   };
 
-  http.Response response = await http.post(apiEndpoint + 'add', body: addBody);
+  http.Response response = await http.post(apiEndpoint + 'add', body: addBody, headers: headers);
   todo.id = response.body;
 
   Todo.todosList.add(todo);
@@ -72,6 +74,6 @@ List<Todo> _processTodos(String rawTodos) {
 
 
 Future<void> getTodos() async {
-  http.Response response = await http.post(apiEndpoint + 'fetch', body: fetchBody);
+  http.Response response = await http.post(apiEndpoint + 'fetch', body: fetchBody, headers: headers);
   Todo.todosList = _processTodos(response.body);
 }
