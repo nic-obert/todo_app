@@ -4,8 +4,8 @@ import 'dart:convert';
 
 final String apiKey = 'p5nsaSjf847MNdss--12';
 
-//final String apiEndpoint = 'https://nic05.pythonanywhere.com/todo-app/';
-final String apiEndpoint = 'http://192.168.1.8:5000/';
+final String apiEndpoint = 'https://nic05.pythonanywhere.com/todo-app/';
+//final String apiEndpoint = 'http://192.168.1.8:5000/todo-app/';
 
 final Map<String, String> fetchBody = {'apiKey': apiKey};
 
