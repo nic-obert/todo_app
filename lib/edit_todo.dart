@@ -2,32 +2,34 @@ import 'package:flutter/material.dart';
 import 'Todo.dart';
 import 'api.dart';
 
-class AddTodo extends StatefulWidget {
+class EditTodo extends StatefulWidget {
   @override
-  _AddTodoState createState() => _AddTodoState();
+  _EditTodoState createState() => _EditTodoState();
 }
 
-class _AddTodoState extends State<AddTodo> {
+class _EditTodoState extends State<EditTodo> {
+
   TextEditingController titleController = TextEditingController();
   TextEditingController descController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  void buildTodo() async {
+  void buildTodo(Todo old) {
 
-    Todo todo = Todo(
-      titleController.text,
-      descController.text,
-      DateTime.now(),
-      ''
-    );
+    old.title = titleController.text;
+    old.desc = descController.text;
 
-    await addTodo(todo);
+    editTodo(old);
 
   }
 
   @override
   Widget build(BuildContext context) {
+
+    Todo todo = ModalRoute.of(context).settings.arguments;
+    titleController.text = todo.title;
+    descController.text = todo.desc;
+
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
@@ -95,14 +97,14 @@ class _AddTodoState extends State<AddTodo> {
                 ),
                 child: FlatButton(
                   padding: EdgeInsets.zero,
-                  onPressed: () async {
+                  onPressed: () {
                     if (_formKey.currentState.validate()) {
-                      await buildTodo();
+                      buildTodo(todo);
                       Navigator.pushNamedAndRemoveUntil(context, '/', (route) => route.willHandlePopInternally);
                     }
                   },
                   child: Text(
-                    'Add',
+                    'Save',
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.white,

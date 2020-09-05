@@ -10,59 +10,61 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Todo App',
-            style: TextStyle(
-              fontSize: 25,
-            ),
+      appBar: AppBar(
+        title: Text(
+          'Todo App',
+          style: TextStyle(
+            fontSize: 25,
           ),
-          actions: <Widget>[
-            Center(
-              child: FlatButton(
-                padding: EdgeInsets.zero,
-                onPressed: () => Navigator.pushNamed(context, '/add'),
-                child: Text(
-                  'Add Todo',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Colors.white
-                  ),
-                )
-              )
-            ),
-            IconButton(
-              icon: Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
-              onPressed: () => Navigator.pushNamed(context, '/add'),
-              iconSize: 35,
-              padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-            )
-          ],
         ),
-        body: SafeArea(
-            child: ListView(
-          children: <TodoWidget>[for (Todo todo in Todo.todosList) TodoWidget(todo)],
-        )));
-  }
-}
-
-class TodoWidget extends StatelessWidget {
-  final Todo todo;
-
-  const TodoWidget(this.todo);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: <Widget>[
-          Text(todo.title),
-          Text(todo.desc),
-          Text(todo.dateCreated.toIso8601String().substring(0, 10)),
+        actions: <Widget>[
+          PopupMenuButton<String>(
+            padding: EdgeInsets.only(right: 10),
+            icon: Icon(
+              Icons.sort,
+              color: Colors.white,
+              size: 30,
+            ),
+            onSelected: (String order) {
+              setState(() {
+                Todo.orderTodos(order);
+              });
+            },
+            itemBuilder: (BuildContext context) {
+              return <PopupMenuEntry<String>>[
+                PopupMenuItem(
+                  value: Todo.orderByNewest,
+                  child: Text('newest'),
+                ),
+                PopupMenuDivider(),
+                PopupMenuItem(
+                  value: Todo.orderByOldest,
+                  child: Text('oldest'),
+                ),
+              ];
+            },
+          ),
         ],
+      ),
+      body: SafeArea(
+        child: Flexible(
+          flex: 1,
+          child: ListView(
+            scrollDirection: Axis.vertical,
+            children: <TodoWidget>[
+              for (Todo todo in Todo.todosList) TodoWidget(todo),
+            ],
+          ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Navigator.pushNamed(context, '/add'),
+        backgroundColor: Colors.blue[500],
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+          size: 35,
+        ),
       ),
     );
   }

@@ -10,20 +10,33 @@ final String apiEndpoint = 'http://192.168.1.8:5000/';
 final Map<String, String> fetchBody = {'apiKey': apiKey};
 
 
+void editTodo(Todo todo) {
 
-void deleteTodo(Todo todo) {
-  Map<String, String> deleteBody = {
+  Map<String, String> editBody = {
     'apiKey': apiKey,
-    'id': todo.id
+    'title': todo.title,
+    'desc': todo.desc,
+    'rowid': todo.id
   };
 
-  http.post(apiEndpoint + 'delete', body: deleteBody);
+  http.post(apiEndpoint + 'edit', body: editBody);
+
 }
 
 
-void addTodo(Todo todo) {
+void deleteTodo(Todo todo) {
 
-  Todo.todosList.add(todo);
+  Map<String, String> deleteBody = {
+    'apiKey': apiKey,
+    'rowid': todo.id
+  };
+
+  http.post(apiEndpoint + 'delete', body: deleteBody);
+  Todo.todosList.removeWhere((element) => element.id == todo.id);
+}
+
+
+void addTodo(Todo todo) async {
 
   Map<String, String> addBody = {
   'apiKey': apiKey,
@@ -31,16 +44,16 @@ void addTodo(Todo todo) {
   'desc': todo.desc,
   'dateCreated': todo.dateCreated.toIso8601String().substring(0, 10)
   };
-  print(addBody);
 
-  http.post(apiEndpoint + 'add', body: addBody);
+  http.Response response = await http.post(apiEndpoint + 'add', body: addBody);
+  todo.id = response.body;
+
+  Todo.todosList.add(todo);
 }
 
 
 List<Todo> _processTodos(String rawTodos) {
-  print('--');
-  print(rawTodos);
-  print('--');
+
   List<Todo> todos = [];
 
   // if no todos received --> return empty list
@@ -51,7 +64,7 @@ List<Todo> _processTodos(String rawTodos) {
       todo['title'],
       todo['desc'],
       DateTime.parse(todo['dateCreated']),
-      todo['id']
+      todo['rowid'].toString()
     ));
   }
   return todos;
@@ -60,6 +73,5 @@ List<Todo> _processTodos(String rawTodos) {
 
 Future<void> getTodos() async {
   http.Response response = await http.post(apiEndpoint + 'fetch', body: fetchBody);
-  print(response.request.url);
   Todo.todosList = _processTodos(response.body);
 }
