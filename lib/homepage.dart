@@ -47,14 +47,11 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: SafeArea(
-        child: Flexible(
-          flex: 1,
-          child: ListView(
-            scrollDirection: Axis.vertical,
-            children: <TodoWidget>[
-              for (Todo todo in Todo.todosList) TodoWidget(todo),
-            ],
-          ),
+        child: ListView(
+          scrollDirection: Axis.vertical,
+          children: <TodoWidget>[
+            for (Todo todo in Todo.todosList) TodoWidget(todo),
+          ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
